@@ -9,14 +9,14 @@
 
 Scaleway CLI is a tool to help you pilot your Scaleway infrastructure directly from your terminal.
 
-# Installation
+## Installation
 
-## With a Package Manager (Recommended)
+### With a Package Manager (Recommended)
 
 A package manager installs and upgrades the Scaleway CLI with a single command.
 We recommend this installation mode for more simplicity and reliability:
 
-### Homebrew
+#### Homebrew
 
 Install the [latest stable release](https://formulae.brew.sh/formula/scw) on macOS/Linux using [Homebrew](http://brew.sh):
 
@@ -24,7 +24,7 @@ Install the [latest stable release](https://formulae.brew.sh/formula/scw) on mac
 brew install scw
 ```
 
-### Arch Linux
+#### Arch Linux
 
 Install the latest stable release on Arch Linux from [official repositories](https://archlinux.org/packages/extra/x86_64/scaleway-cli/).
 For instance with `pacman`:
@@ -33,7 +33,7 @@ For instance with `pacman`:
 pacman -S scaleway-cli
 ```
 
-### Chocolatey
+#### Chocolatey
 
 Install the latest stable release on Windows using [Chocolatey](https://chocolatey.org/) ([Package](https://chocolatey.org/packages/scaleway-cli)):
 
@@ -41,25 +41,25 @@ Install the latest stable release on Windows using [Chocolatey](https://chocolat
 choco install scaleway-cli
 ```
 
-## Manually
+### Manually
 
-### Released Binaries
+#### Released Binaries
 
 We provide [static-compiled binaries](https://github.com/scaleway/scaleway-cli/releases/latest) for darwin (macOS), GNU/Linux, and Windows platforms.
 You just have to download the binary compatible with your platform to a directory available in your `PATH`:
 
-#### Linux
+##### Linux
 
 ```bash
 curl -s https://raw.githubusercontent.com/scaleway/scaleway-cli/master/scripts/get.sh | sh
 ```
 
-#### Windows
+##### Windows
 
 You can download the last release here: <https://github.com/scaleway/scaleway-cli/releases><br/>
 [This official guide](https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-2010/ee537574%28v%3Doffice.14%29) explains how to add tools to your `PATH`.
 
-## Docker Image
+### Docker Image
 
 You can use the CLI as you would run any Docker image:
 

@@ -61,6 +61,7 @@ theme:
     - navigation.path
     - navigation.top
     - navigation.expand
+    - navigation.tracking
     - search.suggest
   markdown_extensions:
     - attr_list
