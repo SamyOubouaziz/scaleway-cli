@@ -1,6 +1,7 @@
 name: build and push doc to S3
 
-on: [push]
+on:
+  pull_request:
 
 jobs:
   build_docs:
