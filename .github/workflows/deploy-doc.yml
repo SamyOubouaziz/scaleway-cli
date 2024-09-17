@@ -60,13 +60,23 @@ jobs:
       - run: ls
       - run: cd docs && mkdocs build
       - run: ls
-      - uses: aws-actions/configure-aws-credentials@v1
-        name: Setup AWS CLI
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: fr-par-1
+      - name: Install MinIO Client
+        run: |
+          curl https://dl.min.io/client/mc/release/linux-amd64/mc \
+            --create-dirs \
+            -o $HOME/minio-binaries/mc
+
+          chmod +x $HOME/minio-binaries/mc
+          export PATH=$PATH:$HOME/minio-binaries/
+
+          mc --help
+      - name: Create MinIO alias
+        run: |
+          mc alias set scws3 https://s3.fr-par.scw.cloud \ 
+          ${{ secrets.AWS_ACCESS_KEY_ID }} \
+          ${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+          --api S3v4
       - name: Push to bucket
         run: |
-          aws s3 sync ./docs/site https://test-actions-doc.s3.fr-par.scw.cloud
+          mc cp --recursive ./docs/site/ scws3/test-actions-doc/
       - run: rm -rf ./docs/site
