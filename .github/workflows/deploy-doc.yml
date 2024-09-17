@@ -65,10 +65,7 @@ jobs:
           ./mc --help
       - name: Create MinIO alias
         run: |
-          ./mc alias set scws3 https://s3.fr-par.scw.cloud \ 
-          ${{ secrets.AWS_ACCESS_KEY_ID }} \
-          ${{ secrets.AWS_SECRET_ACCESS_KEY }} \
-          --api S3v4
+          ./mc alias set scws3 https://s3.fr-par.scw.cloud ${{ secrets.AWS_ACCESS_KEY_ID }} {{ secrets.AWS_SECRET_ACCESS_KEY }} --api S3v4
       - name: Push to bucket
         run: |
           ./mc cp --recursive ./docs/site/ scws3/test-actions-doc/
