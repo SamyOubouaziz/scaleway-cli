@@ -62,14 +62,9 @@ jobs:
       - run: ls
       - name: Install MinIO Client
         run: |
-          curl https://dl.min.io/client/mc/release/linux-amd64/mc \
-            --create-dirs \
-            -o $HOME/minio-binaries/mc
-
-          chmod +x $HOME/minio-binaries/mc
-          export PATH=$PATH:$HOME/minio-binaries/
-
-          mc --help
+          wget https://dl.min.io/client/mc/release/linux-amd64/mc
+          chmod +x mc
+          ./mc --help
       - name: Create MinIO alias
         run: |
           mc alias set scws3 https://s3.fr-par.scw.cloud \ 
