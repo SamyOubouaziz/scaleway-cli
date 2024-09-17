@@ -57,9 +57,7 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - run: pip install mkdocs-material 
-      - run: ls
       - run: cd docs && mkdocs build
-      - run: ls
       - name: Install MinIO Client
         run: |
           wget https://dl.min.io/client/mc/release/linux-amd64/mc
@@ -67,11 +65,11 @@ jobs:
           ./mc --help
       - name: Create MinIO alias
         run: |
-          sudo mc alias set scws3 https://s3.fr-par.scw.cloud \ 
+          ./mc alias set scws3 https://s3.fr-par.scw.cloud \ 
           ${{ secrets.AWS_ACCESS_KEY_ID }} \
           ${{ secrets.AWS_SECRET_ACCESS_KEY }} \
           --api S3v4
       - name: Push to bucket
         run: |
-          sudo mc cp --recursive ./docs/site/ scws3/test-actions-doc/
+          ./mc cp --recursive ./docs/site/ scws3/test-actions-doc/
       - run: rm -rf ./docs/site
