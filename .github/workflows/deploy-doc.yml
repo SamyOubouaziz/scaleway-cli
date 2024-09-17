@@ -1,29 +1,71 @@
-name: build and push doc to S3
 
+# on:
+#   pull_request:
+
+# jobs:
+#   build_docs:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
+#       - name: Setup material for MKdocs
+#         run: |
+#           cd docs && mkdocs build
+  
+#   push_docs:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
+#       - name: Setup AWS CLI
+#         uses: aws-actions/configure-aws-credentials@v1
+#         with:
+#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           aws-region: fr-par
+#       - name: Push to bucket
+#         run: |
+#         aws s3 sync ./docs/site https://test-actions-doc.s3.fr-par.scw.cloud
+
+
+name: build and push doc to S3
 on:
   pull_request:
-
+  push:
+    branches:
+      - master 
+      - main
+permissions:
+  contents: write
 jobs:
-  build_docs:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Setup material for MKdocs
+      - uses: actions/checkout@v4
+      - name: Configure Git Credentials
         run: |
-          cd docs && mkdocs build
-  
-  push_docs:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Setup AWS CLI
-        uses: aws-actions/configure-aws-credentials@v1
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
+      - uses: actions/cache@v4
+        with:
+          key: mkdocs-material-${{ env.cache_id }}
+          path: .cache
+          restore-keys: |
+            mkdocs-material-
+      - run: pip install mkdocs-material 
+      - run: ls
+      - run: mkdocs build
+      - uses: aws-actions/configure-aws-credentials@v1
+        name: Setup AWS CLI
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: fr-par
+          aws-region: fr-par-1
       - name: Push to bucket
         run: |
         aws s3 sync ./docs/site https://test-actions-doc.s3.fr-par.scw.cloud
+      - run: rm -rf ./docs/site
