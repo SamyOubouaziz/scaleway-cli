@@ -17,8 +17,8 @@ jobs:
         run: |
           cd docs
           mkdir docs
-          cp -r /commands/. /docs
-          cp -r /static_files/. /docs
+          cp -r /commands/* /docs
+          cp -r /static_files/* /docs
       - name: Pull Material for MKdocs image and build doc
         run: |
           docker pull squidfunk/mkdocs-material
