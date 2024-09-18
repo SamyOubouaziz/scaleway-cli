@@ -18,7 +18,7 @@ jobs:
           cd docs
           mkdir docs
           ls
-          cp commands/* /docs
+          cp commands/* docs/
           cp -r /static_files/* /docs
       - name: Pull Material for MKdocs image and build doc
         run: |
