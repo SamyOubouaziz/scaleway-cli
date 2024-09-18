@@ -14,8 +14,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-        docker pull squidfunk/mkdocs-material
-        docker run --rm -it -v ${PWD}:/docs squidfunk/mkdocs-material build
+          docker pull squidfunk/mkdocs-material
+          docker run --rm -it -v ${PWD}:/docs squidfunk/mkdocs-material build
     # - name: Set up AWS CLI
     #   run: |
     #     sudo apt-get update
