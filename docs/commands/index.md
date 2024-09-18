@@ -7,7 +7,7 @@
   <a href="https://goreportcard.com/report/github.com/scaleway/scaleway-cli"><img src="https://goreportcard.com/badge/scaleway/scaleway-cli" alt="GoReportCard" /></a> <!-- GoReportCard do not support branches. -->
 </p>
 
-The Scaleway CLI is a tool to help you pilot your Scaleway infrastructure directly from your terminal.
+Scaleway CLI is a tool to help you pilot your Scaleway infrastructure directly from your terminal.
 
 ## Installation
 
