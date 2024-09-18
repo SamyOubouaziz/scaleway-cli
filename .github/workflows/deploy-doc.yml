@@ -39,7 +39,7 @@ jobs:
           ./mc alias set scws3 https://s3.nl-ams.scw.cloud ${{ secrets.AWS_ACCESS_KEY_ID }} ${{ secrets.AWS_SECRET_ACCESS_KEY }} --api S3v4
       - name: Push to bucket
         run: |
-          ./mc cp --debug --recursive ./docs/site/ scws3/test-actions-doc/
+          ./mc cp --recursive ./docs/site/ scws3/test-actions-doc/
       - run: rm -rf ./docs/site
       # - name: Set up AWS CLI
       #   run: |
