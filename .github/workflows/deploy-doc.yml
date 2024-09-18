@@ -1,4 +1,3 @@
-
 name: build and push doc to S3
 on:
   pull_request:
@@ -30,30 +29,19 @@ jobs:
             mkdocs-material-
       - run: pip install mkdocs-material 
       - run: cd docs && mkdocs build
-      # - name: Install MinIO Client # works, but insufficient rights to copy to bucket
-      #   run: |
-      #     wget https://dl.min.io/client/mc/release/linux-amd64/mc
-      #     chmod +x mc
-      #     ./mc --help
-      # - name: Create MinIO alias
-      #   run: |
-      #     ./mc alias set scws3 https://s3.nl-ams.scw.cloud ${{ secrets.AWS_ACCESS_KEY_ID }} ${{ secrets.AWS_SECRET_ACCESS_KEY }} --api S3v4
-      # - name: Push to bucket
-      #   run: |
-      #     ./mc cp --recursive ./docs/site/ scws3/scaleway-cli-doc/
-      # - run: rm -rf ./docs/site
       - name: Set up AWS CLI
         run: |
           sudo apt-get update
           sudo apt-get install -y awscli
 
-      - name: Upload file to S3-Compatible Storage
+      - name: Upload file to Scaleway Object Storage
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
         run: |
           aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID 
           aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
           aws configure set region nl-ams
 
-          aws s3 cp --recursive ./docs/site/ s3://scaleway-cli-doc --endpoint-url https://s3.nl-ams.scw.cloud
+          aws s3 cp --recursive ./docs/site/ s3://$BUCKET_NAME --endpoint-url https://s3.nl-ams.scw.cloud
