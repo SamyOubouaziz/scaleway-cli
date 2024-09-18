@@ -24,21 +24,24 @@ jobs:
         run: |
           docker pull squidfunk/mkdocs-material
           docker run --rm -i -v ${PWD}/docs:/docs squidfunk/mkdocs-material build
-      - name: Install MinIO Client
+      - name: Set up AWS CLI
         run: |
-          wget https://dl.min.io/client/mc/release/linux-amd64/mc
-          chmod +x mc
-          ./mc --help
-      - name: Create MinIO alias
+          sudo apt-get update
+          sudo apt-get install -y awscli
+
+      - name: Sety up AWS parameters
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
           S3_ENDPOINT: ${{ secrets.S3_ENDPOINT }}
         run: |
-          ./mc alias set scws3 $S3_ENDPOINT $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY --api S3v4
-      - name: Push to bucket
+          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID 
+          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+          aws configure set region nl-ams
+
+      - name: Upload file to Scaleway Object Storage
         run: |
-          ./mc cp --recursive ./docs/site/ scws3/$BUCKET_NAME
+          aws s3 cp --recursive ./docs/site/ s3://$BUCKET_NAME --endpoint-url $S3_ENDPOINT
       - name: Delete temporary folder
         run: rm -rf docs/docs/
