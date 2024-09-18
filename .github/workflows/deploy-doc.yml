@@ -1,29 +1,47 @@
-name: build and push doc to S3
-
+name: Build and push CLI doc to S3
 on:
   pull_request:
-
+  push:
+    branches:
+      - master
+permissions:
+  contents: write
 jobs:
-  build_docs:
+  deploy:
     runs-on: ubuntu-latest
+    environment: actions
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Setup material for MKdocs
+      - uses: actions/checkout@v4
+      - name: prepare temporary folder for build
         run: |
-          cd docs && mkdocs build
-  
-  push_docs:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Setup AWS CLI
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: fr-par
-      - name: Push to bucket
+          cd docs
+          mkdir docs
+          ls
+          cp commands/* docs/
+          cp -r static_files/* docs/
+      - name: Pull Material for MKdocs image and build doc
         run: |
-        aws s3 sync ./docs/site https://test-actions-doc.s3.fr-par.scw.cloud
+          docker pull squidfunk/mkdocs-material
+          docker run --rm -i -v ${PWD}/docs:/docs squidfunk/mkdocs-material build
+      - name: Download and set up AWS CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
+
+      - name: Sety up AWS credentials
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID 
+          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+          aws configure set region nl-ams
+
+      - name: Upload file to Scaleway Object Storage
+        env:
+          BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+          S3_ENDPOINT: ${{ secrets.S3_ENDPOINT }}
+        run: |
+          aws s3 cp --recursive ./docs/site/ s3://$BUCKET_NAME --endpoint-url $S3_ENDPOINT
+      - name: Delete temporary folder
+        run: rm -rf docs/docs/
