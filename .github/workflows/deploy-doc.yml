@@ -13,7 +13,14 @@ jobs:
     environment: actions
     steps:
       - uses: actions/checkout@v4
-      - run: |
+      - name: prepare temporary folder for build
+        run: |
+          cd docs
+          mkdir docs
+          cp -r /commands/. /docs
+          cp -r /static_files/. /docs
+      - name: Pull Material for MKdocs image and build doc
+        run: |
           docker pull squidfunk/mkdocs-material
           docker run --rm -i -v ${PWD}/docs:/docs squidfunk/mkdocs-material build
     # - name: Set up AWS CLI
@@ -47,3 +54,5 @@ jobs:
       - name: Push to bucket
         run: |
           ./mc cp --recursive ./docs/site/ scws3/scaleway-cli-doc/
+      - name: Delete temporary folder
+        run: ls
