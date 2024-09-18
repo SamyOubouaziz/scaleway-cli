@@ -1,10 +1,9 @@
-name: build and push doc to S3
+name: Build and push CLI doc to S3
 on:
   pull_request:
   push:
     branches:
-      - master 
-      - main
+      - master
 permissions:
   contents: write
 jobs:
@@ -24,12 +23,12 @@ jobs:
         run: |
           docker pull squidfunk/mkdocs-material
           docker run --rm -i -v ${PWD}/docs:/docs squidfunk/mkdocs-material build
-      - name: Set up AWS CLI
+      - name: Download and set up AWS CLI
         run: |
           sudo apt-get update
           sudo apt-get install -y awscli
 
-      - name: Sety up AWS parameters
+      - name: Sety up AWS credentials
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
