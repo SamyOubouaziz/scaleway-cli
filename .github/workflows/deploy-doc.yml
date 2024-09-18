@@ -11,6 +11,7 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: actions
     steps:
       - uses: actions/checkout@v4
       - name: Configure Git Credentials # stolen from material for MKdocs action to push to GH pages
