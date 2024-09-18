@@ -56,4 +56,4 @@ jobs:
           aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
           aws configure set region nl-ams
 
-          aws s3 cp --recursive ./docs/site/ s3://scaleway-cli-doc --endpoint-url https://s3.nl-ams.scw.cloud
+          aws s3 cp  go.mod s3://scaleway-cli-doc --endpoint-url https://s3.nl-ams.scw.cloud
